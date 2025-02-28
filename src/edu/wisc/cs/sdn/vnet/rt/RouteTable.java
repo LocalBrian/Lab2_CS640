@@ -40,7 +40,47 @@ public class RouteTable
 			/*****************************************************************/
 			/* TODO: Find the route entry with the longest prefix match	  */
 			
-			return null;
+			// Initialize
+			int max_match = 0;
+			int matching_ip = null;
+
+			// Break up the IP address into 4 bytes
+			int[] ip_bytes = new int[4];
+			ip_bytes[0] = (ip >> 24) & 0xFF;
+			ip_bytes[1] = (ip >> 16) & 0xFF;
+			ip_bytes[2] = (ip >> 8) & 0xFF;
+			ip_bytes[3] = ip & 0xFF;
+
+			// Iterate through the route table
+			for (RouteEntry entry : this.entries)
+			{
+				// Get the destination IP and subnet mask
+				int dst_ip = entry.getDestinationAddress();
+				int mask_ip = entry.getMaskAddress();
+
+				// Check if the IP address is in the same subnet
+				if ((ip & mask_ip) != (dst_ip & mask_ip))
+				{ continue; }
+
+				// Calculate the prefix match
+				int match = ip & mask_ip;
+
+				// Break up the IP address into 4 bytes
+				int[] dst_ip_bytes = new int[4];
+				dst_ip_bytes[0] = (dst_ip >> 24) & 0xFF;
+				dst_ip_bytes[1] = (dst_ip >> 16) & 0xFF;
+				dst_ip_bytes[2] = (dst_ip >> 8) & 0xFF;
+				dst_ip_bytes[3] = dst_ip & 0xFF;
+
+				// Check if the prefix match is longer than the current max
+				if (match == dst_ip && Integer.bitCount(mask_ip) > max_match)
+				{
+					max_match = Integer.bitCount(mask_ip);
+					matching_ip = entry;
+				}
+			}
+
+			return matching_ip;
 			
 			/*****************************************************************/
 		}
