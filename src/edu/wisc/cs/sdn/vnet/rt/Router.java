@@ -86,49 +86,103 @@ public class Router extends Device
 		/* TODO: Handle packets                                             */
 		
 		// Check if IPv4 packet
+		if (etherPacket.getEtherType() != Ethernet.TYPE_IPv4) {
+			System.out.println("Not an IPv4 packet. Dropping packet.");
+			return;
+		}
+		System.out.println("Received IPv4 packet.");
+		
+		// Deserialize the IP packet
+		IPv4 ipPacket = (IPv4)etherPacket.getPayload();
 
 		// Subroutine to verify checksum
+		if (!verifyChecksum(ipPacket)) {
+			System.out.println("Invalid checksum. Dropping packet.");
+			return;
+		}
+		System.out.println("Checksum is valid.");
 
 		// Decrement TTL by 1
+		ipPacket.setTtl((byte)(ipPacket.getTtl() - 1));
 
 		// Check if TTL is 0
+		if (ipPacket.getTtl() == 0) {
+			System.out.println("TTL is 0. Dropping packet.");
+			return;
+		} 
+		System.out.println("TTL is not 0.");
 
 		// Check if destination IP is one of the router's interfaces
+		for (Iface iface : this.interfaces.values()) {
+			if (ipPacket.getDestinationAddress() == iface.getIpAddress()) {
+				System.out.println("Destination IP is one of the router's interfaces. Dropping packet.");
+				return;
+			}
+		}
+		System.out.println("Destination IP is not one of the router's interfaces.");
 
 		// Check if destination IP is in routing table
+		RouteEntry bestMatch = this.routeTable.lookup(ipPacket.getDestinationAddress());
+		if (bestMatch == null) {
+			System.out.println("No matching route in routing table. Dropping packet.");
+			return;
+		}
+		System.out.println("Found matching route in routing table.");
 
 		// Check ARP cache for MAC address
+		ArpEntry arpEntry = this.arpCache.lookup(ipPacket.getDestinationAddress());
+		if (arpEntry == null) {
+			System.out.println("No matching ARP entry in ARP cache. Sending ARP request.");
+		} else {
+			System.out.println("Found matching ARP entry in ARP cache. Forwarding packet.");
+		}
 
-		// Call sendPacket() with the appropriate arguments
+		/*************************** Update the header of the ipPacket  ******************************************/
+		// Update the mac address of the source interface in ipPacket
+		ipPacket.setSourceAddress(bestMatch.getInterface().getIpAddress());
+		// Update the mac address of the destination interface in ipPacket
+		ipPacket.setDestinationAddress(bestMatch.getGatewayAddress());
+		// Reset the checksum
+		ipPacket.resetChecksum();
+		// Serialize the ipPacket
+		byte[] serializedPacket = ipPacket.serialize();
+
+		/***************************** Call sendPacket() with the appropriate arguments **********************/
+		System.out.println("Sending packet to next hop.");
+		sendPacket(serializedPacket, bestMatch.getInterface());
 		
-		/********************************************************************/
+		return;
 	}
 
 	/**
 	 * Handle an Ethernet packet received on a specific interface.
-	 * @param etherPacket the Ethernet packet that was received
+	 * @param IPv4 the Ethernet packet that was received
 	 * @return Boolean true if checksum is valid, false otherwise
 	 */
-	public void verifyChecksum(Ethernet etherPacket)
+	public void verifyChecksum(IPv4 etherPacket)
 	{
-		
-		// Call ethernet.getPayload() to get the IP packet
-
-		// Cast result to packet of type IPv4
 
 		// Determine header length
+		byte headerLength =	etherPacket.getHeaderLength();
 
 		// Get the checksum from the IP header
+		short checksum = etherPacket.getChecksum();
 
 		// Set the checksum in the IP header to 0
+		IPv4.resetChecksum();
 
 		// Serialize the IP header with IPv4.serialize()
+		byte[] serializedPacket = etherPacket.serialize();
 
 		// Compute the checksum of the IP header
-
-		// Compare the computed checksum with the checksum from the IP header
+		short computedChecksum = IPv4.calculateChecksum(serializedPacket, headerLength);
 
 		// Return true if the checksums match, false otherwise
+		if (checksum == computedChecksum) {
+			return true; 
+		} else {
+			return false;
+		}
 		
 	}
 }
