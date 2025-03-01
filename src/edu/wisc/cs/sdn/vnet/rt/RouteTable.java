@@ -42,47 +42,66 @@ public class RouteTable
 			
 			// Initialize
 			int max_match = 0;
-			int matching_ip = null;
+			RouteEntry matching_ip = null;
+			int dst_ip = 0;
+			int[] dst_ip_bytes = new int[4];
+
+			// Check if the route table is empty
+			if (this.entries.isEmpty())
+			{ return null; }
+
+			// Check if the IP address is 0
+			if (ip == 0)
+			{ return null; }
 
 			// Break up the IP address into 4 bytes
 			int[] ip_bytes = new int[4];
 			ip_bytes[0] = (ip >> 24) & 0xFF;
 			ip_bytes[1] = (ip >> 16) & 0xFF;
 			ip_bytes[2] = (ip >> 8) & 0xFF;
-			ip_bytes[3] = ip & 0xFF;
+			ip_bytes[3] = ip & 0xFF;	
 
 			// Iterate through the route table
 			for (RouteEntry entry : this.entries)
 			{
-				// Get the destination IP and subnet mask
-				int dst_ip = entry.getDestinationAddress();
-				int mask_ip = entry.getMaskAddress();
 
-				// Check if the IP address is in the same subnet
-				if ((ip & mask_ip) != (dst_ip & mask_ip))
-				{ continue; }
+				// Get the destination IP
+				dst_ip = entry.getDestinationAddress();
 
-				// Calculate the prefix match
-				int match = ip & mask_ip;
-
-				// Break up the IP address into 4 bytes
-				int[] dst_ip_bytes = new int[4];
+				// Break up the destination IP address into 4 bytes
 				dst_ip_bytes[0] = (dst_ip >> 24) & 0xFF;
 				dst_ip_bytes[1] = (dst_ip >> 16) & 0xFF;
 				dst_ip_bytes[2] = (dst_ip >> 8) & 0xFF;
 				dst_ip_bytes[3] = dst_ip & 0xFF;
-
-				// Check if the prefix match is longer than the current max
-				if (match == dst_ip && Integer.bitCount(mask_ip) > max_match)
+				
+				// Loop over bytes and compare to determine if they match
+				for (int i = 0; i < 4; i++)
 				{
-					max_match = Integer.bitCount(mask_ip);
-					matching_ip = entry;
+					if (ip_bytes[i] == dst_ip_bytes[i])
+					{
+						// Check if the prefix match is longer than the current max
+						if (i > max_match)
+						{
+							max_match = i+1;
+							matching_ip = entry;
+						}
+					}
+					else
+					{
+						break;
+					}
+
+					// If full match then return
+					if (max_match == 4)
+					{
+						return matching_ip;
+					}
 				}
 			}
 
+			// Return the best matching IP
 			return matching_ip;
 			
-			/*****************************************************************/
 		}
 	}
 	
