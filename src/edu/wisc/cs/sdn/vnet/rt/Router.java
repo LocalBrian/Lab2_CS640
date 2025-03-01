@@ -91,11 +91,11 @@ public class Router extends Device
 			return;
 		}
 		System.out.println("Received IPv4 packet.");
-		
-		// Deserialize the IP packet
+
+		// Cast the IP packet to an IPv4 packet
 		IPv4 ipPacket = (IPv4)etherPacket.getPayload();
 
-		// Subroutine to verify checksum
+		// Subroutine to verify checksum ------- THIS IS WHERE I LEFT OFF
 		if (!verifyChecksum(ipPacket)) {
 			System.out.println("Invalid checksum. Dropping packet.");
 			return;
@@ -159,26 +159,21 @@ public class Router extends Device
 	 * @param IPv4 the Ethernet packet that was received
 	 * @return Boolean true if checksum is valid, false otherwise
 	 */
-	public void verifyChecksum(IPv4 etherPacket)
+	public boolean verifyChecksum(IPv4 I4packet)
 	{
 
 		// Determine header length
-		byte headerLength =	etherPacket.getHeaderLength();
-
-		// Get the checksum from the IP header
-		short checksum = etherPacket.getChecksum();
-
-		// Set the checksum in the IP header to 0
-		IPv4.resetChecksum();
+		byte headerLength =	I4packet.getHeaderLength();
 
 		// Serialize the IP header with IPv4.serialize()
-		byte[] serializedPacket = etherPacket.serialize();
+		byte[] serializedPacket = I4packet.serialize();
 
-		// Compute the checksum of the IP header
-		short computedChecksum = IPv4.calculateChecksum(serializedPacket, headerLength);
+		// Convert the serialized packet to an IPv4 object
+		IPv4 serializedPacket = new IPv4();
+		serializedPacket.deserialize(serializedPacket, 0, serializedPacket.length);
 
 		// Return true if the checksums match, false otherwise
-		if (checksum == computedChecksum) {
+		if (serializedPacket.getChecksum() == I4packet.getChecksum()) {
 			return true; 
 		} else {
 			return false;
