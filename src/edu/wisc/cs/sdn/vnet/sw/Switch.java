@@ -104,10 +104,14 @@ public class Switch extends Device
 		// Check if the source mac address is in the table
 		for (int i = 0; i < table_length; i++)
 		{
-			if (this.mac_table.mapping_table[i].mac_address == source_mac)
-			{
-				// Update the expiration time to be 15 seconds from now
-				this.mac_table.mapping_table[i].expiration_time = System.currentTimeMillis() + 15000;
+			if (this.mac_table.mapping_table[i] != null)
+			{ 
+				if (this.mac_table.mapping_table[i].mac_address.equals(source_mac))
+				{
+					// Update the expiration time to be 15 seconds from now
+					this.mac_table.mapping_table[i].expiration_time = System.currentTimeMillis() + 15000;
+					break;
+				}
 			}
 		}
 
