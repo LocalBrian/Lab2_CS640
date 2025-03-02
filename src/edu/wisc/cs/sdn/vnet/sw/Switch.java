@@ -79,7 +79,7 @@ public class Switch extends Device
 
 		// Pass in destination mac address and rout or broadcast
 		System.out.println("Sending packet to destination");		
-		send_packet(etherPacket, dest_mac);
+		send_packet(etherPacket, dest_mac, inIface);
 		return;
 		
 		/********************************************************************/
@@ -118,8 +118,9 @@ public class Switch extends Device
 			{
 				// Add the source mac address to the table
 				this.mac_table.mapping_table[i].mac_address = source_mac;
-				this.mac_table.mapping_table[i].bound_interface = in_face.getName();
+				this.mac_table.mapping_table[i].bound_interface = in_face;
 				this.mac_table.mapping_table[i].expiration_time = System.currentTimeMillis() + 15000;
+				break;
 			}
 		}
 
@@ -148,7 +149,7 @@ public class Switch extends Device
 	 * Send the packet to the correct interface
 	 * Or broadcast the packet to all interfaces if not currently in table
 	 */
-	public void send_packet(Ethernet etherPacket, MACAddress targetmac)
+	public void send_packet(Ethernet etherPacket, MACAddress targetmac, Iface inIface)
 	{
 		
 		// Check if mac address is in table

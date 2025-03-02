@@ -4,6 +4,8 @@ import edu.wisc.cs.sdn.vnet.Device;
 import edu.wisc.cs.sdn.vnet.DumpFile;
 import edu.wisc.cs.sdn.vnet.Iface;
 
+import java.nio.ByteBuffer;
+
 import net.floodlightcontroller.packet.Ethernet;
 
 /**
@@ -140,7 +142,7 @@ public class Router extends Device
 		/*************************** Update the header of the Ethernet Packet ***********************************/
 
 		// Make updates to the Ethernet packet
-		etherPacket.setDestinationMACAddress(arpEntry.getMac());
+		etherPacket.setDestinationMACAddress(arpEntry.getMac().toString());
 		etherPacket.setSourceMACAddress(bestMatch.getInterface().getMacAddress());
 		etherPacket.setPayload(ipPacket);
 
