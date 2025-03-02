@@ -176,6 +176,7 @@ public class Switch extends Device
 
 				// Send the packet to the correct interface
 				this.sendPacket(etherPacket, outIface);
+				System.out.println("Broadcasting packet to correct interface");
 				return;
 
 			}
@@ -184,11 +185,14 @@ public class Switch extends Device
 			{continue;}
 		}
 
+		System.out.println("Broadcasting packet to all interfaces");
 		// Broadcast the packet to all interfaces
 		for (Iface iface : this.interfaces.values())
 		{
+			
 			if (iface == inIface) { continue; }
 			this.sendPacket(etherPacket, iface);
 		}
+		return;
 	}
 }
