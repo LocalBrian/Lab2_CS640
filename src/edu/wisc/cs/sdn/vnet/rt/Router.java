@@ -7,6 +7,7 @@ import edu.wisc.cs.sdn.vnet.Iface;
 import java.nio.ByteBuffer;
 
 import net.floodlightcontroller.packet.Ethernet;
+import net.floodlightcontroller.packet.IPv4;
 
 /**
  * @author Aaron Gember-Jacobson and Anubhavnidhi Abhashkumar
@@ -143,7 +144,7 @@ public class Router extends Device
 
 		// Make updates to the Ethernet packet
 		etherPacket.setDestinationMACAddress(arpEntry.getMac().toString());
-		etherPacket.setSourceMACAddress(bestMatch.getInterface().getMacAddress());
+		etherPacket.setSourceMACAddress(bestMatch.getInterface().getMacAddress().toString());
 		etherPacket.setPayload(ipPacket);
 
 		/***************************** Call sendPacket() with the appropriate arguments *************************/
@@ -155,7 +156,7 @@ public class Router extends Device
 
 	/**
 	 * Handle an Ethernet packet received on a specific interface.
-	 * @param IPv4 the Ethernet packet that was received
+	 * @param I4packet the Ethernet packet that was received
 	 * @return Boolean true if checksum is valid, false otherwise
 	 */
 	public boolean verifyChecksum(IPv4 I4packet)

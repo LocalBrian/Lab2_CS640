@@ -99,7 +99,7 @@ public class Switch extends Device
 		{ return; }
 
 		// Establish length of table as min of table size or number of entries
-		int table_length = this.mac_table.mapping_table.max_table_entries;
+		int table_length = this.mac_table.max_table_entries;
 
 		// Check if the source mac address is in the table
 		for (int i = 0; i < table_length; i++)
@@ -153,7 +153,7 @@ public class Switch extends Device
 	{
 		
 		// Check if mac address is in table
-		for (int i = 0; i < this.mac_table.mapping_table.max_table_entries; i++)
+		for (int i = 0; i < this.mac_table.max_table_entries; i++)
 		{
 			/* Bypass if this entry is null */
 			if (this.mac_table.mapping_table[i] == null) { continue; }
