@@ -121,6 +121,7 @@ public class Switch extends Device
 			if (this.mac_table.mapping_table[i] == null)
 			{
 				// Add the source mac address to the table
+				this.mac_table.mapping_table[i] = new MacPortBinding();
 				this.mac_table.mapping_table[i].mac_address = source_mac;
 				this.mac_table.mapping_table[i].bound_interface = in_face;
 				this.mac_table.mapping_table[i].expiration_time = System.currentTimeMillis() + 15000;
