@@ -88,6 +88,8 @@ public class Switch extends Device
 	/**
 	 * Evaluate the source mac address against the table of mac addresses
 	 * and ports
+	 * @param source_mac the source mac address
+	 * @param interface the interface the source mac address is bound to
 	 */
 	public void source_mac_table_eval(MACAddress source_mac, Iface interface)
 	{
