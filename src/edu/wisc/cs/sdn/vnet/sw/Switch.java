@@ -142,7 +142,9 @@ public class Switch extends Device
 		// Check for timers on all entries and remove any that are expired
 		for (int i = 0; i < table_length; i++)
 		{
-			if (this.mac_table.mapping_table[i].expiration_time < System.currentTimeMillis())
+			// Skip if entry is null
+			if (this.mac_table.mapping_table[i] == null) { continue; }
+			else if (this.mac_table.mapping_table[i].expiration_time < System.currentTimeMillis())
 			{
 				// Remove the entry from the table
 				this.mac_table.mapping_table[i] = null;
