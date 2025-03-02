@@ -63,18 +63,24 @@ public class Switch extends Device
 
 		// Get the source mac address
 		MACAddress source_mac = etherPacket.getSourceMAC();
+		System.out.println("Obtained source mac address");
 
 		// Check if mac address is in table
 		source_mac_table_eval(source_mac, inIface);
+		System.out.println("Updating table with source mac address");
 
 		// Check the table for expired entries
 		check_table();
+		System.out.println("Checking table for expired entries");
 
 		// Get the destination mac address
 		MACAddress dest_mac = etherPacket.getDestinationMAC();
+		System.out.println("Obtained destination mac address");
 
 		// Pass in destination mac address and rout or broadcast
+		System.out.println("Sending packet to destination");		
 		send_packet(etherPacket, dest_mac);
+		return;
 		
 		/********************************************************************/
 	}

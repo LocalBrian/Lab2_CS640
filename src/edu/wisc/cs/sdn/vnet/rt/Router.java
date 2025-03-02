@@ -82,8 +82,8 @@ public class Router extends Device
 		System.out.println("*** -> Received packet: " +
 				etherPacket.toString().replace("\n", "\n\t"));
 		
-		/********************************************************************/
-		/* TODO: Handle packets                                             */
+		
+		/*************************** Perform validation of the Packet  ******************************************/
 		
 		// Check if IPv4 packet
 		if (etherPacket.getEtherType() != Ethernet.TYPE_IPv4) {
@@ -95,7 +95,7 @@ public class Router extends Device
 		// Cast the IP packet to an IPv4 packet
 		IPv4 ipPacket = (IPv4)etherPacket.getPayload();
 
-		// Subroutine to verify checksum ------- THIS IS WHERE I LEFT OFF
+		// Subroutine to verify checksum 
 		if (!verifyChecksum(ipPacket)) {
 			System.out.println("Invalid checksum. Dropping packet.");
 			return;
@@ -137,19 +137,16 @@ public class Router extends Device
 			System.out.println("Found matching ARP entry in ARP cache. Forwarding packet.");
 		}
 
-		/*************************** Update the header of the ipPacket  ******************************************/
-		// Update the mac address of the source interface in ipPacket
-		ipPacket.setSourceAddress(bestMatch.getInterface().getIpAddress());
-		// Update the mac address of the destination interface in ipPacket
-		ipPacket.setDestinationAddress(bestMatch.getGatewayAddress());
-		// Reset the checksum
-		ipPacket.resetChecksum();
-		// Serialize the ipPacket
-		byte[] serializedPacket = ipPacket.serialize();
+		/*************************** Update the header of the Ethernet Packet ***********************************/
 
-		/***************************** Call sendPacket() with the appropriate arguments **********************/
+		// Make updates to the Ethernet packet
+		etherPacket.setDestinationMACAddress(arpEntry.getMac());
+		etherPacket.setSourceMACAddress(bestMatch.getInterface().getMacAddress());
+		etherPacket.setPayload(ipPacket);
+
+		/***************************** Call sendPacket() with the appropriate arguments *************************/
 		System.out.println("Sending packet to next hop.");
-		sendPacket(serializedPacket, bestMatch.getInterface());
+		sendPacket(etherPacket, bestMatch.getInterface());
 		
 		return;
 	}
@@ -165,19 +162,29 @@ public class Router extends Device
 		// Determine header length
 		byte headerLength =	I4packet.getHeaderLength();
 
-		// Serialize the IP header with IPv4.serialize()
-		byte[] serializedPacket = I4packet.serialize();
+		// Get the checksum from the IP header
+		short checksum = I4packet.getChecksum();
 
-		// Convert the serialized packet to an IPv4 object
-		IPv4 serializedPacket = new IPv4();
-		serializedPacket.deserialize(serializedPacket, 0, serializedPacket.length);
+		// Initiailze ByteBuffer, serialize sets the checksum of the header to 0
+		ByteBuffer bb = ByteBuffer.wrap(I4packet.serialize());
 
-		// Return true if the checksums match, false otherwise
-		if (serializedPacket.getChecksum() == I4packet.getChecksum()) {
-			return true; 
+		// compute checksum
+		bb.rewind();
+		int accumulation = 0;
+		for (int i = 0; i < headerLength * 2; ++i) {
+			accumulation += 0xffff & bb.getShort();
+		}
+		accumulation = ((accumulation >> 16) & 0xffff)
+				+ (accumulation & 0xffff);
+		short checksumCalc = (short) (~accumulation & 0xffff);
+	
+		// Compare the calculated checksum with the checksum in the header
+		if (checksumCalc == checksum) {
+			return true;
 		} else {
 			return false;
 		}
+        
 		
 	}
 }
