@@ -91,11 +91,12 @@ public class Switch extends Device
 	 * @param source_mac the source mac address
 	 * @param interface the interface the source mac address is bound to
 	 */
-	public void source_mac_table_eval(MACAddress source_mac, Iface interface)
+	public void source_mac_table_eval(MACAddress source_mac, Iface in_face)
 	{
 		
 		// Back out if soure_mac is null
-		if (source_mac == null) { return; }
+		if (source_mac == null) 
+		{ return; }
 
 		// Establish length of table as min of table size or number of entries
 		int table_length = this.mac_table.mapping_table.max_table_entries;
@@ -117,7 +118,7 @@ public class Switch extends Device
 			{
 				// Add the source mac address to the table
 				this.mac_table.mapping_table[i].mac_address = source_mac;
-				this.mac_table.mapping_table[i].bound_interface = interface.getName();
+				this.mac_table.mapping_table[i].bound_interface = in_face.getName();
 				this.mac_table.mapping_table[i].expiration_time = System.currentTimeMillis() + 15000;
 			}
 		}
@@ -157,7 +158,7 @@ public class Switch extends Device
 			if (this.mac_table.mapping_table[i] == null) { continue; }
 
 			// Check if the mac address is in the table
-			if else (this.mac_table.mapping_table[i].mac_address.equals(targetmac))
+			else if (this.mac_table.mapping_table[i].mac_address.equals(targetmac))
 			{
 				// Get the interface from the table
 				Iface outIface = this.getInterface(this.mac_table.mapping_table[i].bound_interface);
