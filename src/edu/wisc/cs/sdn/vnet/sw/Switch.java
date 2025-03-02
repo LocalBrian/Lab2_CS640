@@ -162,7 +162,7 @@ public class Switch extends Device
 			else if (this.mac_table.mapping_table[i].mac_address.equals(targetmac))
 			{
 				// Get the interface from the table
-				Iface outIface = this.getInterface(this.mac_table.mapping_table[i].bound_interface);
+				Iface outIface = this.mac_table.mapping_table[i].bound_interface;
 
 				// Check if the interface is null, and exit loop if so
 				if (outIface == null) { break; }
