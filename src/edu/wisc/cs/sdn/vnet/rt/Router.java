@@ -138,9 +138,10 @@ public class Router extends Device
 		System.out.println(bestMatch.toString());
 
 		// Check ARP cache for MAC address
-		ArpEntry arpEntry = this.arpCache.lookup(ipPacket.getDestinationAddress());
+		ArpEntry arpEntry = this.arpCache.lookup(bestMatch.getDestinationAddress());
 		if (arpEntry == null) {
-			System.out.println("No matching ARP entry in ARP cache. Sending ARP request.");
+			System.out.println("No matching ARP entry in ARP cache. Aborting.");
+			return;
 		} else {
 			System.out.println("Found matching ARP entry in ARP cache. Forwarding packet.");
 		}

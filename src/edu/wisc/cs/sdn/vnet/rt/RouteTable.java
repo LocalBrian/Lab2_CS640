@@ -65,8 +65,6 @@ public class RouteTable
 			for (RouteEntry entry : this.entries)
 			{
 				
-				System.out.println(entry.toString());
-
 				// Get the destination IP
 				dst_ip = entry.getDestinationAddress();
 
@@ -81,7 +79,6 @@ public class RouteTable
 				{
 					if (ip_bytes[i] == dst_ip_bytes[i])
 					{
-						System.out.println("Matched byte: " + i);
 						// Check if the prefix match is longer than the current max
 						if (i >= max_match)
 						{
