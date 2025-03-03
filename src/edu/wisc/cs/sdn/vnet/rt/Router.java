@@ -168,46 +168,15 @@ public class Router extends Device
 
 		// Get the checksum from the IP header
 		short checksumTemp = (short) (I4packet.getChecksum());
-		System.out.println("Checksum: " + (checksumTemp)); // ***************************************
-		String checksumHex = Integer.toHexString(checksumTemp);
-		System.out.println("Checksum in hex: " + checksumHex); // ***************************************
-		String checksumBin = Integer.toBinaryString(checksumTemp);
-		System.out.println("Checksum in binary: " + checksumBin); // ***************************************
 
 		// Reset the checksum of the packet
 		I4packet.resetChecksum();
-		short resetChecksum = I4packet.getChecksum();
-		System.out.println("Checksum after reset: " + resetChecksum); // ***************************************
-		
+
 		// Serialize and recalculate the checksum
 		I4packet.serialize();
-		short checksum = I4packet.getChecksum();
-		System.out.println("Checksum after reset: " + checksum); // ***************************************
 
-		// Initiailze ByteBuffer
-		ByteBuffer bb = ByteBuffer.wrap(I4packet.serialize());
-
-		// compute checksum
-		bb.rewind();
-		int accumulation = 0;
-		for (int i = 0; i < ((headerLength * 2)-2); ++i) {
-			accumulation += 0xffff & bb.getShort();
-			System.out.println("Accumulation: " + accumulation); // ***************************************
-		}
-		System.out.println("Accumulation Final pre transfer: " + accumulation);
-		accumulation = (int) ((accumulation >> 16) & 0xffff) + (accumulation & 0xffff);
-		System.out.println("Accumulation after modification 1: " + accumulation);
-		short checksumInvert = (short) (~accumulation & 0xffff);
-		System.out.println("checksumcalc after modification 2: " + checksumInvert);
-
-		System.out.println("Accumulation Final: " + checksumInvert); // ***************************************
-		String accumulationHex = Integer.toHexString(checksumInvert);
-		System.out.println("Checksum in hex: " + accumulationHex); // ***************************************
-		String accumulationmBin = Integer.toBinaryString(checksumInvert);
-		System.out.println("Checksum in binary: " + accumulationmBin); // ***************************************
-	
 		// Compare the calculated checksum with the checksum in the header
-		if (checksumInvert == checksumTemp) {
+		if (I4packet.getChecksum() == checksumTemp) {
 			return true;
 		} else {
 			return false;
