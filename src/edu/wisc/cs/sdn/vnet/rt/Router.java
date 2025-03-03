@@ -176,7 +176,9 @@ public class Router extends Device
 
 		// Reset the checksum of the packet
 		I4packet.resetChecksum();
-
+		short resetChecksum = I4packet.getChecksum();
+		System.out.println("Checksum after reset: " + resetChecksum); // ***************************************
+		
 		// Serialize and recalculate the checksum
 		I4packet.serialize();
 		short checksum = I4packet.getChecksum();
