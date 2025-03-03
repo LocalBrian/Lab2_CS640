@@ -177,13 +177,13 @@ public class Router extends Device
 		// Reset the checksum of the packet
 		I4packet.resetChecksum();
 
-		// Initiailze ByteBuffer, serialize sets the checksum of the header to 0
+		// Initiailze ByteBuffer
 		ByteBuffer bb = ByteBuffer.wrap(I4packet.serialize());
 
 		// compute checksum
 		bb.rewind();
 		int accumulation = 0;
-		for (int i = 0; i < headerLength * 2; ++i) {
+		for (int i = 0; i < ((headerLength * 2)-2); ++i) {
 			accumulation += 0xffff & bb.getShort();
 			System.out.println("Accumulation: " + accumulation); // ***************************************
 		}
