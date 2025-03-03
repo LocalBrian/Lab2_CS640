@@ -132,7 +132,7 @@ public class Router extends Device
 			return;
 		}
 
-		bestMatch.toString();
+		System.out.println(bestMatch.toString());
 
 		// Check ARP cache for MAC address
 		ArpEntry arpEntry = this.arpCache.lookup(ipPacket.getDestinationAddress());
@@ -142,7 +142,7 @@ public class Router extends Device
 			System.out.println("Found matching ARP entry in ARP cache. Forwarding packet.");
 		}
 
-		arpEntry.toString();
+		System.out.println(arpEntry.toString());
 
 		/*************************** Update the header of the Ethernet Packet ***********************************/
 
