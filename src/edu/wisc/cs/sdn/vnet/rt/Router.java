@@ -151,8 +151,8 @@ public class Router extends Device
 		/*************************** Update the header of the Ethernet Packet ***********************************/
 
 		// Make updates to the Ethernet packet
-		etherPacket.setDestinationMACAddress(Ethernet.toMACAddress(arpEntry.getMac()));
-		etherPacket.setSourceMACAddress(Ethernet.toMACAddress(bestMatch.getInterface().getMacAddress()));
+		etherPacket.setDestinationMACAddress(arpEntry.getMac().toBytes());
+		etherPacket.setSourceMACAddress(bestMatch.getInterface().getMacAddress().toBytes());
 		etherPacket.setPayload(ipPacket);
 
 		/***************************** Call sendPacket() with the appropriate arguments *************************/
