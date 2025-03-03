@@ -154,10 +154,18 @@ public class Router extends Device
 		etherPacket.setDestinationMACAddress(arpEntry.getMac().toString());
 		etherPacket.setSourceMACAddress(bestMatch.getInterface().getMacAddress().toString());
 		etherPacket.setPayload(ipPacket);
+		etherPacket.ser
 
 		/***************************** Call sendPacket() with the appropriate arguments *************************/
-		System.out.println("Sending packet to next hop.");
-		sendPacket(etherPacket, bestMatch.getInterface());
+		System.out.println("Attempting to send packet to next hop.");
+		if (sendPacket(etherPacket, bestMatch.getInterface()))
+		{
+			System.out.println("Packet sent successfully.");
+		}
+		else
+		{
+			System.out.println("Failed to send packet.");
+		}
 		
 		return;
 	}
