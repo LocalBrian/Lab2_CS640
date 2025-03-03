@@ -88,6 +88,12 @@ public class Router extends Device
 		
 		/*************************** Perform validation of the Packet  ******************************************/
 		
+		// Get details on source and destination MAC addresses
+		byte[] srcMAC = etherPacket.getSourceMACAddress();
+		byte[] dstMAC = etherPacket.getDestinationMACAddress();
+		System.out.println("Source MAC: " + MACAddress.valueOf(srcMAC).toString());
+		System.out.println("Destination MAC: " + MACAddress.valueOf(dstMAC).toString());
+
 		// Check if IPv4 packet
 		if (etherPacket.getEtherType() != Ethernet.TYPE_IPv4) {
 			System.out.println("Not an IPv4 packet. Dropping packet.");
@@ -165,6 +171,11 @@ public class Router extends Device
 		{
 			System.out.println("Failed to send packet.");
 		}
+
+		byte[] srcMAC = etherPacket.getSourceMACAddress();
+		byte[] dstMAC = etherPacket.getDestinationMACAddress();
+		System.out.println("Source MAC: " + MACAddress.valueOf(srcMAC).toString());
+		System.out.println("Destination MAC: " + MACAddress.valueOf(dstMAC).toString());
 		
 		return;
 	}
