@@ -168,7 +168,7 @@ public class Router extends Device
 
 		// Get the checksum from the IP header
 		short checksum = I4packet.getChecksum();
-		System.out.println("Checksum: " + checksum + "in bits" + );
+		System.out.println("Checksum: " + checksum); // ***************************************
 		String checksumHex = Integer.toHexString(checksum);
 		System.out.println("Checksum in hex: " + checksumHex); // ***************************************
 		String checksumBin = Integer.toBinaryString(checksum);
