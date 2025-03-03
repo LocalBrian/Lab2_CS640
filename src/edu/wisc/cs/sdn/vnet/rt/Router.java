@@ -167,14 +167,15 @@ public class Router extends Device
 		System.out.println("Header Length: " + headerLength); // ************************************
 
 		// Get the checksum from the IP header
-		short checksumTemp = (short) (I4packet.getChecksum() & 0xffff);
-		System.out.println("Checksum: " + checksumTemp); // ***************************************
-		System.out.println("Checksum type: " + ((Object)checksumTemp).getClass().getName()); // ***************************************
+		short checksumTemp = (short) (I4packet.getChecksum());
+		System.out.println("Checksum: " + (checksumTemp)); // ***************************************
 		String checksumHex = Integer.toHexString(checksumTemp);
 		System.out.println("Checksum in hex: " + checksumHex); // ***************************************
 		String checksumBin = Integer.toBinaryString(checksumTemp);
 		System.out.println("Checksum in binary: " + checksumBin); // ***************************************
 
+		// Reset the checksum of the packet
+		I4packet.resetChecksum();
 
 		// Initiailze ByteBuffer, serialize sets the checksum of the header to 0
 		ByteBuffer bb = ByteBuffer.wrap(I4packet.serialize());
