@@ -120,8 +120,6 @@ public class Router extends Device
 
 		// Check if destination IP is one of the router's interfaces
 		for (Iface iface : this.interfaces.values()) {
-			// Print out the interface details
-			System.out.println(iface.toString());
 			if (ipPacket.getDestinationAddress() == iface.getIpAddress()) {
 				System.out.println("Destination IP is one of the router's interfaces. Dropping packet.");
 				return;

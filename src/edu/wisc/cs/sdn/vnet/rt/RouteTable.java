@@ -71,16 +71,17 @@ public class RouteTable
 				dst_ip = entry.getDestinationAddress();
 
 				// Break up the destination IP address into 4 bytes
-				dst_ip_bytes[0] = (dst_ip >> 24) & 0xFF;
-				dst_ip_bytes[1] = (dst_ip >> 16) & 0xFF;
-				dst_ip_bytes[2] = (dst_ip >> 8) & 0xFF;
-				dst_ip_bytes[3] = dst_ip & 0xFF;
+				dst_ip_bytes[0] = (int) ((dst_ip >> 24) & 0xFF);
+				dst_ip_bytes[1] = (int) ((dst_ip >> 16) & 0xFF);
+				dst_ip_bytes[2] = (int) ((dst_ip >> 8)  & 0xFF);
+				dst_ip_bytes[3] = (int) ( dst_ip        & 0xFF);
 				
 				// Loop over bytes and compare to determine if they match
 				for (int i = 0; i < 4; i++)
 				{
 					if (ip_bytes[i] == dst_ip_bytes[i])
 					{
+						System.out.println("Matched byte: " + i);
 						// Check if the prefix match is longer than the current max
 						if (i > max_match)
 						{
