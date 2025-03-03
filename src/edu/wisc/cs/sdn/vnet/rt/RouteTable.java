@@ -83,7 +83,7 @@ public class RouteTable
 					{
 						System.out.println("Matched byte: " + i);
 						// Check if the prefix match is longer than the current max
-						if (i > max_match)
+						if (i >= max_match)
 						{
 							max_match = i+1;
 							matching_ip = entry;
