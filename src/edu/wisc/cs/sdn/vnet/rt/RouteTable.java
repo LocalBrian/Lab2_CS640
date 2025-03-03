@@ -64,6 +64,8 @@ public class RouteTable
 			// Iterate through the route table
 			for (RouteEntry entry : this.entries)
 			{
+				
+				System.out.println(entry.toString());
 
 				// Get the destination IP
 				dst_ip = entry.getDestinationAddress();
