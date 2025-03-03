@@ -167,11 +167,11 @@ public class Router extends Device
 		System.out.println("Header Length: " + headerLength); // ************************************
 
 		// Get the checksum from the IP header
-		short checksum = I4packet.getChecksum();
-		System.out.println("Checksum: " + checksum); // ***************************************
-		String checksumHex = Integer.toHexString(checksum);
+		short checksumTemp = (I4packet.getChecksum() & 0xffff);
+		System.out.println("Checksum: " + checksumTemp); // ***************************************
+		String checksumHex = Integer.toHexString(checksumTemp);
 		System.out.println("Checksum in hex: " + checksumHex); // ***************************************
-		String checksumBin = Integer.toBinaryString(checksum);
+		String checksumBin = Integer.toBinaryString(checksumTemp);
 		System.out.println("Checksum in binary: " + checksumBin); // ***************************************
 
 
@@ -185,9 +185,9 @@ public class Router extends Device
 			accumulation += 0xffff & bb.getShort();
 			System.out.println("Accumulation: " + accumulation); // ***************************************
 		}
-		accumulation = ((accumulation >> 16) & 0xffff)
-				+ (accumulation & 0xffff);
-		short checksumCalc = (short) (~accumulation & 0xffff);
+		accumulation = ((accumulation >> 16) & 0xffff) + (accumulation & 0xffff);
+		short checksumInvert = (short) (~accumulation);
+		short checksumCalc = (short) (checksumInvert & 0xffff);
 
 		System.out.println("Accumulation Final: " + checksumCalc); // ***************************************
 		String accumulationHex = Integer.toHexString(checksumCalc);
@@ -196,7 +196,7 @@ public class Router extends Device
 		System.out.println("Checksum in binary: " + accumulationmBin); // ***************************************
 	
 		// Compare the calculated checksum with the checksum in the header
-		if (checksumCalc == checksum) {
+		if (checksumCalc == checksumTemp) {
 			return true;
 		} else {
 			return false;
