@@ -115,13 +115,17 @@ public class Router extends Device
 		} 
 		System.out.println("TTL is not 0.");
 
+		System.out.println("Destination IP." + ipPacket.getDestinationAddress().toString());
+
 		// Check if destination IP is one of the router's interfaces
 		for (Iface iface : this.interfaces.values()) {
 			if (ipPacket.getDestinationAddress() == iface.getIpAddress()) {
 				System.out.println("Destination IP is one of the router's interfaces. Dropping packet.");
+				System.out.println("Destination IP." + iface.getIpAddress().toString());
 				return;
 			}
 		}
+		
 		System.out.println("Destination IP is not one of the router's interfaces.");
 
 		// Check if destination IP is in routing table
@@ -130,7 +134,10 @@ public class Router extends Device
 			System.out.println("No matching route in routing table. Dropping packet.");
 			return;
 		}
-		System.out.println("Found matching route in routing table.");
+
+		System.out.println("Found matching dest in routing table." + bestMatch.getDestinationAddress().toString());
+		System.out.println("Found matching mac in routing table." + bestMatch.getDestinationMAC().toString());
+		System.out.println("Found matching mask in routing table." + bestMatch.getMaskAddress().toString());
 
 		// Check ARP cache for MAC address
 		ArpEntry arpEntry = this.arpCache.lookup(ipPacket.getDestinationAddress());
@@ -139,6 +146,9 @@ public class Router extends Device
 		} else {
 			System.out.println("Found matching ARP entry in ARP cache. Forwarding packet.");
 		}
+
+		System.out.println("Destination arp mac." + arpEntry.getMac().toString());
+		System.out.println("Destination mac." + bestMatch.getDestinationMAC().toString());
 
 		/*************************** Update the header of the Ethernet Packet ***********************************/
 
