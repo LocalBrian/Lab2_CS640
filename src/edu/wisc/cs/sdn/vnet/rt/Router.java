@@ -8,6 +8,7 @@ import java.nio.ByteBuffer;
 
 import net.floodlightcontroller.packet.Ethernet;
 import net.floodlightcontroller.packet.IPv4;
+import net.floodlightcontroller.packet.MACAddress;
 
 /**
  * @author Aaron Gember-Jacobson and Anubhavnidhi Abhashkumar
@@ -89,10 +90,10 @@ public class Router extends Device
 		/*************************** Perform validation of the Packet  ******************************************/
 		
 		// Get details on source and destination MAC addresses
-		byte[] srcMAC = etherPacket.getSourceMACAddress();
-		byte[] dstMAC = etherPacket.getDestinationMACAddress();
-		System.out.println("Source MAC: " + MACAddress.valueOf(srcMAC).toString());
-		System.out.println("Destination MAC: " + MACAddress.valueOf(dstMAC).toString());
+		byte[] sourcemacie = etherPacket.getSourceMACAddress();
+		byte[] destmacie = etherPacket.getDestinationMACAddress();
+		System.out.println("Source MAC: " + MACAddress.valueOf(sourcemacie).toString());
+		System.out.println("Destination MAC: " + MACAddress.valueOf(destmacie).toString());
 
 		// Check if IPv4 packet
 		if (etherPacket.getEtherType() != Ethernet.TYPE_IPv4) {
@@ -172,10 +173,10 @@ public class Router extends Device
 			System.out.println("Failed to send packet.");
 		}
 
-		byte[] srcMAC = etherPacket.getSourceMACAddress();
-		byte[] dstMAC = etherPacket.getDestinationMACAddress();
-		System.out.println("Source MAC: " + MACAddress.valueOf(srcMAC).toString());
-		System.out.println("Destination MAC: " + MACAddress.valueOf(dstMAC).toString());
+		byte[] sourcemac2 = etherPacket.getSourceMACAddress();
+		byte[] destMAC2 = etherPacket.getDestinationMACAddress();
+		System.out.println("Source MAC: " + MACAddress.valueOf(sourcemac2).toString());
+		System.out.println("Destination MAC: " + MACAddress.valueOf(destMAC2).toString());
 		
 		return;
 	}
