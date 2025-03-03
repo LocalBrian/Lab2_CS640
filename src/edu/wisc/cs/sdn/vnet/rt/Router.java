@@ -185,8 +185,11 @@ public class Router extends Device
 			accumulation += 0xffff & bb.getShort();
 			System.out.println("Accumulation: " + accumulation); // ***************************************
 		}
-		accumulation = ((accumulation >> 16) & 0xffff) + (accumulation & 0xffff);
+		System.out.println("Accumulation Final pre transfer: " + accumulation);
+		accumulation = (int) ((accumulation >> 16) & 0xffff) + (accumulation & 0xffff);
+		System.out.println("Accumulation after modification 1: " + accumulation);
 		short checksumInvert = (short) (~accumulation);
+		System.out.println("checksumcalc after modification 2: " + checksumInvert);
 		short checksumCalc = (short) (checksumInvert & 0xffff);
 
 		System.out.println("Accumulation Final: " + checksumCalc); // ***************************************
