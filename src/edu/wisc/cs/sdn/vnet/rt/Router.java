@@ -164,9 +164,11 @@ public class Router extends Device
 
 		// Determine header length
 		byte headerLength =	I4packet.getHeaderLength();
+		System.out.println("Header Length: " + headerLength); // ************************************
 
 		// Get the checksum from the IP header
 		short checksum = I4packet.getChecksum();
+		System.out.println("Checksum: " + checksum); // ***************************************
 
 		// Initiailze ByteBuffer, serialize sets the checksum of the header to 0
 		ByteBuffer bb = ByteBuffer.wrap(I4packet.serialize());
@@ -176,9 +178,11 @@ public class Router extends Device
 		int accumulation = 0;
 		for (int i = 0; i < headerLength * 2; ++i) {
 			accumulation += 0xffff & bb.getShort();
+			System.out.println("Accumulation: " + accumulation); // ***************************************
 		}
 		accumulation = ((accumulation >> 16) & 0xffff)
 				+ (accumulation & 0xffff);
+		System.out.println("Accumulation Final: " + accumulation); // ***************************************
 		short checksumCalc = (short) (~accumulation & 0xffff);
 	
 		// Compare the calculated checksum with the checksum in the header
