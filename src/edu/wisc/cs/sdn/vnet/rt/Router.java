@@ -168,7 +168,12 @@ public class Router extends Device
 
 		// Get the checksum from the IP header
 		short checksum = I4packet.getChecksum();
-		System.out.println("Checksum: " + checksum); // ***************************************
+		System.out.println("Checksum: " + checksum + "in bits" + );
+		String checksumHex = Integer.toHexString(checksum);
+		System.out.println("Checksum in hex: " + checksumHex); // ***************************************
+		String checksumBin = Integer.toBinaryString(checksum);
+		System.out.println("Checksum in binary: " + checksumBin); // ***************************************
+
 
 		// Initiailze ByteBuffer, serialize sets the checksum of the header to 0
 		ByteBuffer bb = ByteBuffer.wrap(I4packet.serialize());
@@ -182,8 +187,13 @@ public class Router extends Device
 		}
 		accumulation = ((accumulation >> 16) & 0xffff)
 				+ (accumulation & 0xffff);
-		System.out.println("Accumulation Final: " + accumulation); // ***************************************
 		short checksumCalc = (short) (~accumulation & 0xffff);
+
+		System.out.println("Accumulation Final: " + checksumCalc); // ***************************************
+		String accumulationHex = Integer.toHexString(checksumCalc);
+		System.out.println("Checksum in hex: " + accumulationHex); // ***************************************
+		String accumulationmBin = Integer.toBinaryString(checksumCalc);
+		System.out.println("Checksum in binary: " + accumulationmBin); // ***************************************
 	
 		// Compare the calculated checksum with the checksum in the header
 		if (checksumCalc == checksum) {
