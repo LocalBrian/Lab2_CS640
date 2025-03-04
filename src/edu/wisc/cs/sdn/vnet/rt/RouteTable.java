@@ -37,8 +37,6 @@ public class RouteTable
 	{
 		synchronized(this.entries)
 		{
-			/*****************************************************************/
-			/* TODO: Find the route entry with the longest prefix match	  */
 			
 			// Initialize
 			int max_match = 0;
@@ -87,15 +85,11 @@ public class RouteTable
 						}
 					}
 					else
-					{
-						break;
-					}
+					{break;}
 
 					// If full match then return
 					if (max_match == 4)
-					{
-						return matching_ip;
-					}
+					{return matching_ip;}
 				}
 			}
 

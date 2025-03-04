@@ -58,31 +58,24 @@ public class Switch extends Device
 		System.out.println("*** -> Received packet: " +
 				etherPacket.toString().replace("\n", "\n\t"));
 		
-		/********************************************************************/
-		/* TODO: Handle packets                                             */
 
 		// Get the source mac address
 		MACAddress source_mac = etherPacket.getSourceMAC();
-		System.out.println("Obtained source mac address");
 
 		// Check if mac address is in table
 		source_mac_table_eval(source_mac, inIface);
-		System.out.println("Updating table with source mac address");
 
 		// Check the table for expired entries
 		check_table();
-		System.out.println("Checking table for expired entries");
 
 		// Get the destination mac address
 		MACAddress dest_mac = etherPacket.getDestinationMAC();
-		System.out.println("Obtained destination mac address");
 
-		// Pass in destination mac address and rout or broadcast
+		// Pass in destination mac address and route or broadcast
 		System.out.println("Sending packet to destination");		
 		send_packet(etherPacket, dest_mac, inIface);
 		return;
 		
-		/********************************************************************/
 	}
 
 	/**
@@ -110,7 +103,7 @@ public class Switch extends Device
 				{
 					// Update the expiration time to be 15 seconds from now
 					this.mac_table.mapping_table[i].expiration_time = System.currentTimeMillis() + 15000;
-					break;
+					return;
 				}
 			}
 		}

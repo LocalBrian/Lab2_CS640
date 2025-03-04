@@ -88,19 +88,12 @@ public class Router extends Device
 		
 		
 		/*************************** Perform validation of the Packet  ******************************************/
-		
-		// Get details on source and destination MAC addresses
-		byte[] sourcemacie = etherPacket.getSourceMACAddress();
-		byte[] destmacie = etherPacket.getDestinationMACAddress();
-		System.out.println("Source MAC: " + MACAddress.valueOf(sourcemacie).toString());
-		System.out.println("Destination MAC: " + MACAddress.valueOf(destmacie).toString());
 
 		// Check if IPv4 packet
 		if (etherPacket.getEtherType() != Ethernet.TYPE_IPv4) {
 			System.out.println("Not an IPv4 packet. Dropping packet.");
 			return;
 		}
-		System.out.println("Received IPv4 packet.");
 
 		// Cast the IP packet to an IPv4 packet
 		IPv4 ipPacket = (IPv4)etherPacket.getPayload();
@@ -110,7 +103,6 @@ public class Router extends Device
 			System.out.println("Invalid checksum. Dropping packet.");
 			return;
 		}
-		System.out.println("Checksum is valid.");
 
 		// Decrement TTL by 1
 		ipPacket.setTtl((byte)(ipPacket.getTtl() - 1));
@@ -119,15 +111,11 @@ public class Router extends Device
 		if (ipPacket.getTtl() == 0) {
 			System.out.println("TTL is 0. Dropping packet.");
 			return;
-		} 
-		System.out.println("TTL is not 0.");
+		}
 
 		// Recalculate checksum of the IP packet
 		ipPacket.resetChecksum();
 		ipPacket.serialize();
-
-		// Print out the destination IP address
-		System.out.println("Destination IP: " + IPv4.fromIPv4Address(ipPacket.getDestinationAddress()));
 
 		// Check if destination IP is one of the router's interfaces
 		for (Iface iface : this.interfaces.values()) {
@@ -136,8 +124,6 @@ public class Router extends Device
 				return;
 			}
 		}
-		
-		System.out.println("Destination IP is not one of the router's interfaces.");
 
 		// Check if destination IP is in routing table
 		RouteEntry bestMatch = this.routeTable.lookup(ipPacket.getDestinationAddress());
@@ -146,18 +132,14 @@ public class Router extends Device
 			return;
 		}
 
-		System.out.println(bestMatch.toString());
-
 		// Check ARP cache for MAC address
 		ArpEntry arpEntry = this.arpCache.lookup(ipPacket.getDestinationAddress());
 		if (arpEntry == null) {
 			System.out.println("No matching ARP entry in ARP cache. Aborting.");
 			return;
 		} else {
-			System.out.println("Found matching ARP entry in ARP cache. Forwarding packet.");
+			System.out.println("Passed all verification and matching ARP entry in ARP cache. Forwarding packet.");
 		}
-
-		System.out.println(arpEntry.toString());
 
 		/*************************** Update the header of the Ethernet Packet ***********************************/
 
@@ -176,11 +158,6 @@ public class Router extends Device
 		{
 			System.out.println("Failed to send packet.");
 		}
-
-		byte[] sourcemac2 = etherPacket.getSourceMACAddress();
-		byte[] destMAC2 = etherPacket.getDestinationMACAddress();
-		System.out.println("Source MAC: " + MACAddress.valueOf(sourcemac2).toString());
-		System.out.println("Destination MAC: " + MACAddress.valueOf(destMAC2).toString());
 		
 		return;
 	}
@@ -192,11 +169,6 @@ public class Router extends Device
 	 */
 	public boolean verifyChecksum(IPv4 I4packet)
 	{
-
-		// Determine header length
-		byte headerLength =	I4packet.getHeaderLength();
-		System.out.println("Header Length: " + headerLength); // ************************************
-
 		// Get the checksum from the IP header
 		short checksumTemp = (short) (I4packet.getChecksum());
 
@@ -212,7 +184,6 @@ public class Router extends Device
 		} else {
 			return false;
 		}
-        
 		
 	}
 }
