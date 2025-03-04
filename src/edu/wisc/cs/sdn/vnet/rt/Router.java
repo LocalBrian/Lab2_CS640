@@ -122,6 +122,10 @@ public class Router extends Device
 		} 
 		System.out.println("TTL is not 0.");
 
+		// Recalculate checksum of the IP packet
+		ipPacket.resetChecksum();
+		ipPacket.serialize();
+
 		// Print out the destination IP address
 		System.out.println("Destination IP: " + IPv4.fromIPv4Address(ipPacket.getDestinationAddress()));
 
